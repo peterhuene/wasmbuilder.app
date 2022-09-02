@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.input-file {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+/* https://reactflow.dev/docs/introduction/#attribution
+   In non-commercial applications you may hide the attribution without subscribing
+   but are welcome to sponsor us on Github. */
+.react-flow__attribution {
+  display: none;
+}
+
+.react-flow__node {
+  cursor: inherit;
+}
+
+.react-flow__handle {
+  position: inherit;
+  border: inherit;
+  width: 16px;
+  height: 16px;
+}
+
+.react-flow__handle-left,
+.react-flow__handle-right {
+  left: inherit;
+  top: inherit;
+  transform: inherit;
+}
+
+.node-header {
+  cursor: grab;
+  min-width: 12em;
+}
+
+.react-flow__edge-textbg {
+  fill: #e2e8f0;
+}
+
+.react-flow__edge-text {
+  fill: #b1b1b7;
+}
+
+.react-flow__edge.selected .react-flow__edge-text {
+  fill: #555;
+}

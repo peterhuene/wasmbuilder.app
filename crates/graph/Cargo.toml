@@ -1,0 +1,19 @@
+[package]
+name = "graph"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+anyhow = "1.0.66"
+once_cell = "1.15.0"
+serde = "1.0.145"
+serde_json = "1.0.87"
+wasm-bindgen = "0.2.83"
+wasmparser = { git = "https://github.com/bytecodealliance/wasm-tools", rev = "cdba43d" }
+wit-component = { git = "https://github.com/bytecodealliance/wit-bindgen", rev = "e1b85f2" }
+wasm-compose = { git = "https://github.com/bytecodealliance/wasm-tools", rev = "cdba43d" }
+wat = "1.0.49"
+serde-wasm-bindgen = "0.4.5"

@@ -1,0 +1,9 @@
+target/
+Cargo.lock
+**/*.rs.bk
+node_modules/
+dist/
+.parcel-cache/
+yarn-error.log
+src/graph_bg.wasm
+src/graph.js
