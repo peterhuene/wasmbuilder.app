@@ -133,6 +133,7 @@ struct Files {
     paths: Vec<String>,
     bytes: Vec<String>,
     mimes: Vec<String>,
+    caches: Vec<&'static str>,
 }
 
 impl Files {
@@ -162,8 +163,12 @@ impl Files {
                 Some(root) if *root == file_path => {
                     found_root = true;
                     files.paths.push("".to_string());
+                    files.caches.push("no-cache");
                 }
-                _ => files.paths.push(file_path),
+                _ => {
+                    files.paths.push(file_path);
+                    files.caches.push("max-age=31536000, public, immutable");
+                }
             }
 
             files
@@ -215,6 +220,7 @@ pub fn serve(input: TokenStream) -> TokenStream {
         paths,
         bytes,
         mimes,
+        caches,
     } = match Files::new(&input) {
         Ok(files) => files,
         Err(e) => {
@@ -240,7 +246,7 @@ pub fn serve(input: TokenStream) -> TokenStream {
                         println!("serving file `/{}` ({})", #paths, #mimes);
                         return Ok(Response::from_status(StatusCode::OK)
                             .with_header("Content-Type", #mimes)
-                            .with_header("Cache-Control", "max-age=31536000, public, immutable")
+                            .with_header("Cache-Control", #caches)
                             .with_body(include_bytes!(#bytes) as &[u8]));
                     }
                 )*
