@@ -12,7 +12,7 @@ help:
 	@grep -E '^[a-zA-Z\._-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 build: ## builds the graph wasm module
-	@$(CARGO) build --release --target wasm32-unknown-unknown
+	@$(CARGO) build --release --target wasm32-unknown-unknown -p graph
 
 bindgen: build ## generates bindings for the graph wasm module
 	@$(WASM_BINDGEN) --target web target/wasm32-unknown-unknown/release/graph.wasm --out-dir src --no-typescript

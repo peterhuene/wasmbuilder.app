@@ -1,0 +1,14 @@
+[package]
+name = "fastly-compute-project"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[profile.release]
+debug = 1
+
+[dependencies]
+fastly = "^0.8.6"
+fastly-static-site = { path = "../fastly-static-site" }
+
+[workspace]

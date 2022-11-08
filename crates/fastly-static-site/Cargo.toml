@@ -1,0 +1,17 @@
+[package]
+name = "fastly-static-site"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+anyhow = "1.0.66"
+mime_guess = "2.0.4"
+proc-macro-error = "1.0.4"
+proc-macro2 = "1.0.47"
+quote = "1.0.21"
+syn = "1.0.103"
+walkdir = "2.3.2"
+wildmatch = "2.1.1"
