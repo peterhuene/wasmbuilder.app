@@ -9,7 +9,6 @@ import ReactFlow, {
   ReactFlowProvider,
   BackgroundVariant,
 } from "react-flow-renderer";
-import init from "./graph";
 import { Component, Instance, useAppState } from "./state";
 import InstanceNode from "./nodes";
 import colors from "tailwindcss/colors";
@@ -161,5 +160,3 @@ const App = () => {
 };
 
 export default App;
-
-(async () => await init())();

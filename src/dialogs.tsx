@@ -97,16 +97,12 @@ export const AddComponentDialog = ({
 
     const bytes = new Uint8Array(await file.arrayBuffer());
     try {
-      const component = addComponentToGraph(name, bytes);
+      const component = addComponentToGraph(name, bytes) as Component;
       component.color = selectedColor;
       component.description = description;
       onClose(component);
     } catch (e) {
-      if (e instanceof Error) {
-        throw e;
-      }
-
-      setFileError(e);
+      setFileError(e.payload);
     }
   };
 
@@ -423,7 +419,11 @@ export const DownloadComponentDialog = ({
     }
 
     try {
-      const bytes = encodeGraph(defineComponents, exportedInstance);
+      const bytes = encodeGraph({
+        defineComponents,
+        export: exportedInstance?.id,
+        validate: true,
+      });
 
       downloadFile(name, bytes);
 
@@ -436,14 +436,10 @@ export const DownloadComponentDialog = ({
 
       onClose(component);
     } catch (e) {
-      if (e instanceof Error) {
-        throw e;
-      }
-
       pushNotification({
         type: NotificationType.Error,
         title: "Download Failed",
-        message: e,
+        message: e.payload,
       });
 
       onClose(null);

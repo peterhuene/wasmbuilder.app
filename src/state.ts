@@ -11,6 +11,7 @@ import {
 import create from "zustand";
 import { immer } from "zustand/middleware/immer";
 import {
+  Component as GraphComponent,
   instantiateComponent,
   removeInstance,
   removeComponent,
@@ -18,25 +19,9 @@ import {
   disconnectInstances,
 } from "./graph";
 
-export type Import = {
-  index: number;
-  name: string;
-  kind: string;
-};
-
-export type Export = {
-  name: string;
-  kind: string;
-};
-
-export type Component = {
-  id: number;
-  name: string;
+export type Component = GraphComponent & {
   description: string;
   color: string;
-  interface: string | null;
-  imports: Import[];
-  exports: Export[];
 };
 
 export type Instance = {
@@ -60,12 +45,12 @@ interface AppState {
   nodes: Node<Instance>[];
   edges: Edge[];
   selectedComponent: Component | null;
-  exportedInstance: number | null;
+  exportedInstance: Instance | null;
   notifications: Notification[];
   addComponent: (component: Component) => void;
   removeComponent: (component: Component) => void;
   selectComponent: (component: Component | null) => void;
-  exportInstance: (instance: number | null) => void;
+  exportInstance: (instance: Instance | null) => void;
   instantiateComponent: (name: string, position: XYPosition) => void;
   onNodesChange: (changes: NodeChange[]) => void;
   onNodesDelete: (nodes: Node[]) => void;
@@ -95,6 +80,9 @@ export const useAppState = create<AppState>()(
       removeComponent: (component) => {
         removeComponent(component.id);
         set((state) => {
+          if (state.exportedInstance?.component.id == component.id) {
+            state.exportedInstance = null;
+          }
           delete state.components[component.name];
           state.nodes = state.nodes.filter(
             (node) => node.data.component.id !== component.id
@@ -106,11 +94,11 @@ export const useAppState = create<AppState>()(
           state.selectedComponent = component;
         });
       },
-      exportInstance: (id) => {
+      exportInstance: (instance) => {
         set((state) => {
-          state.exportedInstance = id;
+          state.exportedInstance = instance;
 
-          if (id) {
+          if (instance) {
             state.notifications.push({
               type: NotificationType.Success,
               title: "Exporting instance",
@@ -123,9 +111,9 @@ export const useAppState = create<AppState>()(
       instantiateComponent: (name, position) => {
         set((state) => {
           const component = state.components[name];
-          const id = instantiateComponent(component.id).toString();
+          const id = instantiateComponent(component.id);
           state.nodes.push({
-            id,
+            id: id.toString(),
             type: "instance",
             dragHandle: ".node-header",
             position,
@@ -141,9 +129,14 @@ export const useAppState = create<AppState>()(
           state.nodes = applyNodeChanges(changes, state.nodes);
         });
       },
-      onNodesDelete: (deleted: Node[]) => {
-        deleted.forEach((node) => {
-          removeInstance(node.id);
+      onNodesDelete: (deleted: Node<Instance>[]) => {
+        set((state) => {
+          deleted.forEach((node) => {
+            if (state.exportedInstance?.id === node.data.id) {
+              state.exportedInstance = null;
+            }
+            removeInstance(node.data.id);
+          });
         });
       },
       onEdgesChange: (changes: EdgeChange[]) => {
@@ -153,27 +146,29 @@ export const useAppState = create<AppState>()(
       },
       onEdgesDelete: (deleted: Edge[]) => {
         deleted.forEach((edge) => {
-          disconnectInstances(edge.source, edge.target, edge.targetHandle);
+          disconnectInstances(
+            Number(edge.source),
+            Number(edge.target),
+            Number(edge.targetHandle)
+          );
         });
       },
       onConnect: (connection: Edge | Connection) => {
         try {
           connectInstances(
-            connection.source,
-            connection.sourceHandle === "i" ? null : connection.sourceHandle,
-            connection.target,
-            connection.targetHandle
+            Number(connection.source),
+            connection.sourceHandle === "i"
+              ? null
+              : Number(connection.sourceHandle),
+            Number(connection.target),
+            Number(connection.targetHandle)
           );
         } catch (e) {
-          if (e instanceof Error) {
-            throw e;
-          }
-
           set((state) => {
             state.notifications.push({
               type: NotificationType.Error,
               title: "Invalid connection",
-              message: e,
+              message: e.payload,
             });
           });
           return;

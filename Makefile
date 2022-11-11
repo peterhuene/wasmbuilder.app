@@ -3,23 +3,23 @@ ESLINT := $(MODULES)/eslint
 PARCEL := $(MODULES)/parcel
 CARGO := cargo
 YARN := yarn
-WASM_BINDGEN := wasm-bindgen
 ENTRY_POINT := src/index.html
+WIT_BINDGEN := wit-bindgen
 WASM_OPT := wasm-opt
 WASM_STRIP := wasm-strip
 
 help:
 	@grep -E '^[a-zA-Z\._-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-build: ## builds the graph wasm module
-	@$(CARGO) build --release --target wasm32-unknown-unknown -p graph
+build: ## builds the graph component
+	@$(CARGO) component build --release -p graph
 
-bindgen: build ## generates bindings for the graph wasm module
-	@$(WASM_BINDGEN) --target web target/wasm32-unknown-unknown/release/graph.wasm --out-dir src --no-typescript
+bindgen: build ## generates bindings for the graph component
+	@$(WIT_BINDGEN) host js target/wasm32-unknown-unknown/release/graph.wasm --tla-compat --out-dir src
 
 opt: bindgen # optimizes the graph wasm module
-	@$(WASM_OPT) -Os src/graph_bg.wasm -o src/graph_bg.wasm
-	@$(WASM_STRIP) src/graph_bg.wasm
+	@$(WASM_OPT) -Os src/graph.core.wasm -o src/graph.core.wasm
+	@$(WASM_STRIP) src/graph.core.wasm
 
 bundle: opt ## bundles the application
 	@$(PARCEL) build $(ENTRY_POINT)
@@ -32,11 +32,13 @@ test: ## runs tests
 	@$(CARGO) test
 
 lint: ## runs linting
-	@$(CARGO) clippy --release --target wasm32-unknown-unknown
+	@$(CARGO) component clippy --release --target wasm32-unknown-unknown
 	@$(ESLINT) src
 
 run: bindgen ## runs development
 	@$(PARCEL) $(ENTRY_POINT) -p 3000
 
-setup: ## installs dependencies
+setup: ## installs build dependencies
 	@$(YARN)
+	@$(CARGO) install --git https://github.com/bytecodealliance/wit-bindgen wit-bindgen-cli
+	@$(CARGO) install --git https://github.com/bytecodealliance/cargo-component

@@ -12,7 +12,6 @@ from other WebAssembly components.
 To build this project, the following tools must be installed locally:
 
 - [The latest stable Rust toolchain](https://www.rust-lang.org/tools/install)
-- [wasm-bindgen CLI](https://rustwasm.github.io/docs/wasm-bindgen/reference/cli.html)
 - [Yarn](https://yarnpkg.com/getting-started/install)
 - [Make](https://www.gnu.org/software/make/)
 
@@ -23,6 +22,9 @@ To install the dependencies of the project, run the following command:
 ```sh
 $ make setup
 ```
+
+This will also install the `wit-bindgen` and `cargo component` command line tools
+(if not already installed).
 
 ### Running Locally
 
@@ -81,7 +83,7 @@ This will create an instance of the component that can be connected to other ins
 ### Anatomy of an Instance
 
 Each instance of a component has a set of imports and exports. Exports and imports can be connected
-by dragging a connection between the circles that represent them.
+by dragging a connection between the circles and squares that represent them.
 
 An example instance:
 
@@ -98,7 +100,7 @@ Finally, the checkbox in the upper left corner can be used to export the instanc
 ### Connecting Instances
 
 To connect two instances, drag a connection from the circle of an export on one instance to the
-circle of a matching import on another instance.
+square of a matching import on another instance.
 
 The names do not need to match, but the types of the items must be compatible with one another.
 
