@@ -58,7 +58,7 @@ export const AddComponentDialog = ({
 }: AddComponentDialogProps) => {
   const nameInputRef = useRef<HTMLInputElement>(null);
   const [nameError, setNameError] = useState("");
-  const descriptionInputRef = useRef<HTMLTextAreaElement>(null);
+  const descriptionInputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File>(null);
   const [fileError, setFileError] = useState("");
   const [selectedColor, setSelectedColor] = useState(randomColor);
@@ -220,12 +220,13 @@ export const AddComponentDialog = ({
                               </span>
                             </div>
                             <div className="relative mt-1 rounded-md shadow-sm">
-                              <textarea
+                              <input
                                 ref={descriptionInputRef}
+                                type="text"
                                 name="description"
-                                rows={4}
                                 className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                              ></textarea>
+                                aria-invalid="true"
+                              ></input>
                             </div>
                           </div>
                           <div>
@@ -308,7 +309,7 @@ export const AddComponentDialog = ({
                           <div className="flex items-center justify-center w-full">
                             <label
                               htmlFor="file"
-                              className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-white hover:bg-gray-50 focus-within:border-indigo-500 focus-within:ring-indigo-500"
+                              className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-white hover:bg-gray-50 focus-within:border-indigo-500 focus-within:ring-indigo-500"
                               onDragOver={handleDragOver}
                               onDrop={handleDrop}
                             >
@@ -392,7 +393,7 @@ export const DownloadComponentDialog = ({
   const [nameError, setNameError] = useState("");
   const [defineComponents, setDefineComponents] = useState(true);
   const [addComponent, setAddComponent] = useState(true);
-  const descriptionInputRef = useRef<HTMLTextAreaElement>(null);
+  const descriptionInputRef = useRef<HTMLInputElement>(null);
   const [selectedColor, setSelectedColor] = useState(randomColor);
 
   const handleAfterLeave = () => {
@@ -501,7 +502,7 @@ export const DownloadComponentDialog = ({
                     </div>
                     <div className="flex flex-1 flex-col justify-between">
                       <div className="px-4 sm:px-6">
-                        <div className="space-y-2 pt-4 pb-5">
+                        <div className="space-y-2 mt-4 mb-4">
                           <div>
                             <label
                               htmlFor="name"
@@ -568,7 +569,7 @@ export const DownloadComponentDialog = ({
                             </span>
                           </div>
                         </div>
-                        <div className="relative flex items-start">
+                        <div className="relative flex items-start mb-4">
                           <div className="flex h-5 items-center">
                             <input
                               id="add"
@@ -582,7 +583,7 @@ export const DownloadComponentDialog = ({
                               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                             />
                           </div>
-                          <div className="ml-3 text-sm mb-4">
+                          <div className="ml-3 text-sm">
                             <label
                               htmlFor="add"
                               className="font-medium text-gray-700"
@@ -598,7 +599,7 @@ export const DownloadComponentDialog = ({
                             </span>
                           </div>
                         </div>
-                        <div>
+                        <div className="mb-2">
                           <div className="flex justify-between">
                             <label
                               htmlFor="description"
@@ -611,13 +612,14 @@ export const DownloadComponentDialog = ({
                             </span>
                           </div>
                           <div className="relative mt-1 rounded-md shadow-sm">
-                            <textarea
+                            <input
                               ref={descriptionInputRef}
+                              type="text"
                               name="description"
                               disabled={!addComponent}
-                              rows={4}
                               className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm disabled:bg-gray-100 disabled:text-gray-500"
-                            ></textarea>
+                              aria-invalid="true"
+                            ></input>
                           </div>
                         </div>
                         <div>
