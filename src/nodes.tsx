@@ -30,9 +30,9 @@ const InstanceNode = ({ data, selected }: InstanceNodeProps) => {
                   id="exported"
                   name="exported"
                   type="checkbox"
-                  checked={data.id == exportedInstance}
+                  checked={data.id == exportedInstance?.id}
                   onChange={(e) =>
-                    exportInstance(e.target.checked ? data.id : null)
+                    exportInstance(e.target.checked ? data : null)
                   }
                   className={`h-4 w-4 rounded border-${color}-300 text-${color}-500 focus:ring-0`}
                 />

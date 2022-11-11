@@ -5,5 +5,6 @@ node_modules/
 dist/
 .parcel-cache/
 yarn-error.log
-src/graph_bg.wasm
+src/graph.core.wasm
+src/graph.d.ts
 src/graph.js
