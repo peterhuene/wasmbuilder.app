@@ -42,7 +42,7 @@ By default, the application runs on port 3000. Open a Web browser and navigate t
 The application is a single-page [React](https://reactjs.org/) application that is bundled
 with [Parcel](https://parceljs.org/).
 
-It uses a small Rust library, compiled to a WebAssembly module, that is responsible for parsing
+It uses a WebAssembly component (implemented in Rust), that is responsible for parsing
 WebAssembly component files and maintaining the composition graph state.
 
 The React application maintains the state of the user interface and ensures that the internal
