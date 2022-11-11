@@ -255,7 +255,7 @@ export const AddComponentDialog = ({
                                       leaveFrom="opacity-100"
                                       leaveTo="opacity-0"
                                     >
-                                      <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                                      <Listbox.Options className="absolute z-10 mt-1 max-h-32 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                                         {Colors.map((color, i) => (
                                           <Listbox.Option
                                             key={i}
@@ -618,7 +618,7 @@ export const DownloadComponentDialog = ({
                             ></input>
                           </div>
                         </div>
-                        <div>
+                        <div className="mb-1">
                           <Listbox
                             value={selectedColor}
                             onChange={setSelectedColor}
@@ -629,7 +629,7 @@ export const DownloadComponentDialog = ({
                                 <Listbox.Label className="block text-sm font-medium text-gray-600">
                                   Color
                                 </Listbox.Label>
-                                <div className="relative mt-1">
+                                <div className="mt-1">
                                   <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm disabled:bg-gray-100">
                                     <div
                                       className={`${selectedColor} h-4`}
@@ -649,7 +649,7 @@ export const DownloadComponentDialog = ({
                                     leaveFrom="opacity-100"
                                     leaveTo="opacity-0"
                                   >
-                                    <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                                    <Listbox.Options className="z-10 mt-1 mb-1 max-h-32 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-sm ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                                       {Colors.map((color, i) => (
                                         <Listbox.Option
                                           key={i}
