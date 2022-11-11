@@ -5,6 +5,8 @@ CARGO := cargo
 YARN := yarn
 ENTRY_POINT := src/index.html
 WIT_BINDGEN := wit-bindgen
+WASM_OPT := wasm-opt
+WASM_STRIP := wasm-strip
 
 help:
 	@grep -E '^[a-zA-Z\._-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -15,7 +17,11 @@ build: ## builds the graph component
 bindgen: build ## generates bindings for the graph component
 	@$(WIT_BINDGEN) host js target/wasm32-unknown-unknown/release/graph.wasm --tla-compat --out-dir src
 
-bundle: bindgen ## bundles the application
+opt: bindgen # optimizes the graph wasm module
+	@$(WASM_OPT) -Os src/graph.core.wasm -o src/graph.core.wasm
+	@$(WASM_STRIP) src/graph.core.wasm
+
+bundle: opt ## bundles the application
 	@$(PARCEL) build $(ENTRY_POINT)
 
 format: ## formats source code
