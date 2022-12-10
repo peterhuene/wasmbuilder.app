@@ -16,11 +16,11 @@ Prism.languages["wit"] = {
   },
   keyword: {
     pattern:
-      /\b(use|type|resource|func|u8|u16|u32|u64|s8|s16|s32|s64|float32|float64|char|handle|record|enum|flags|variant|union|bool|string|option|list|result|as|from|static|interface|tuple|async|future|stream)\b/,
+      /(^|\s)(use|type|func|u8|u16|u32|u64|s8|s16|s32|s64|float32|float64|char|record|flags|variant|enum|union|bool|string|option|result|future|stream|list|_|as|from|static|interface|tuple|implements|import|export|world|default)\b/,
   },
   identifier: {
     // TODO: support unicode identifiers
-    pattern: /\b%?[a-z][a-z-]*\b/u,
+    pattern: /\b%?[a-z][a-z0-9-]*\b/u,
     alias: "symbol",
   },
 };
@@ -45,7 +45,7 @@ export const ComponentDetails = ({
   const selectedDescription = selectedComponent?.description ?? "";
   const selectedImports = selectedComponent?.imports ?? [];
   const selectedExports = selectedComponent?.exports ?? [];
-  const selectedInterface = selectedComponent?.interface ?? "";
+  const selectedWit = selectedComponent?.wit ?? "";
 
   const handleConfirmRemoveComponent = (remove: boolean) => {
     setShowConfirmDialog(false);
@@ -226,11 +226,11 @@ export const ComponentDetails = ({
                             Interface
                           </h1>
                         </div>
-                        {selectedInterface.length > 0 ? (
+                        {selectedWit.length > 0 ? (
                           <div className="mt-2 max-h-96 overflow-y-auto">
                             <Highlight
                               {...defaultProps}
-                              code={selectedInterface}
+                              code={selectedWit}
                               theme={vsDark}
                               language={"wit" as Language}
                             >
