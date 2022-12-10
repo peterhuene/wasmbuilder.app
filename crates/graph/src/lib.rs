@@ -6,7 +6,7 @@ use once_cell::sync::Lazy;
 use std::sync::Mutex;
 use wasm_compose::graph::CompositionGraph;
 use wasmparser::{ComponentExternalKind, ComponentTypeRef};
-use wit_component::{decode_component_interfaces, InterfacePrinter};
+use wit_component::{decode_world, WorldPrinter};
 
 static GRAPH: Lazy<Mutex<CompositionGraph>> = Lazy::new(Default::default);
 
@@ -25,15 +25,15 @@ impl Interface for GraphComponent {
 
         let component = graph.get_component(id).unwrap();
 
-        let interfaces =
-            decode_component_interfaces(component.bytes()).map_err(|e| format!("{e:#}"))?;
+        let world =
+            decode_world(component.name(), component.bytes()).map_err(|e| format!("{e:#}"))?;
 
         Ok(Component {
             id: id.0 as u32,
             name: component.name().to_string(),
             imports: component
                 .imports()
-                .map(|(_, name, ty)| Import {
+                .map(|(_, name, _, ty)| Import {
                     name: name.to_string(),
                     kind: match ty {
                         ComponentTypeRef::Module(_) => ItemKind::Module,
@@ -47,7 +47,7 @@ impl Interface for GraphComponent {
                 .collect(),
             exports: component
                 .exports()
-                .map(|(_, name, kind, _)| Export {
+                .map(|(_, name, _, kind, _)| Export {
                     name: name.to_string(),
                     kind: match kind {
                         ComponentExternalKind::Module => ItemKind::Module,
@@ -59,13 +59,8 @@ impl Interface for GraphComponent {
                     },
                 })
                 .collect(),
-            interface: interfaces
-                .default
-                .map(|i| {
-                    let mut printer = InterfacePrinter::default();
-                    printer.print(&i)
-                })
-                .transpose()
+            wit: WorldPrinter::default()
+                .print(&world)
                 .map_err(|e| format!("{e:#}"))?,
         })
     }
