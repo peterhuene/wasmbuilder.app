@@ -3,8 +3,8 @@ ESLINT := $(MODULES)/eslint
 PARCEL := $(MODULES)/parcel
 CARGO := cargo
 YARN := yarn
+NPX := npx
 ENTRY_POINT := src/index.html
-WIT_BINDGEN := wit-bindgen
 WASM_OPT := wasm-opt
 WASM_STRIP := wasm-strip
 
@@ -15,7 +15,7 @@ build: ## builds the graph component
 	@$(CARGO) component build --release -p graph
 
 bindgen: build ## generates bindings for the graph component
-	@$(WIT_BINDGEN) host js target/wasm32-unknown-unknown/release/graph.wasm --tla-compat --out-dir src
+	@$(NPX) jsct transpile target/wasm32-unknown-unknown/release/graph.wasm --tla-compat -o src
 
 opt: bindgen # optimizes the graph wasm module
 	@$(WASM_OPT) -Os src/graph.core.wasm -o src/graph.core.wasm
@@ -40,5 +40,4 @@ run: bindgen ## runs development
 
 setup: ## installs build dependencies
 	@$(YARN)
-	@$(CARGO) install --git https://github.com/bytecodealliance/wit-bindgen wit-bindgen-cli
 	@$(CARGO) install --git https://github.com/bytecodealliance/cargo-component

@@ -7,17 +7,11 @@ import {
   applyEdgeChanges,
   EdgeChange,
   Connection,
-} from "react-flow-renderer";
-import create from "zustand";
+} from "reactflow";
+import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import {
-  Component as GraphComponent,
-  instantiateComponent,
-  removeInstance,
-  removeComponent,
-  connectInstances,
-  disconnectInstances,
-} from "./graph";
+import { Component as GraphComponent } from "./exports/graph";
+import { graph } from "./graph";
 
 export type Component = GraphComponent & {
   description: string;
@@ -78,7 +72,7 @@ export const useAppState = create<AppState>()(
         });
       },
       removeComponent: (component) => {
-        removeComponent(component.id);
+        graph.removeComponent(component.id);
         set((state) => {
           if (state.exportedInstance?.component.id == component.id) {
             state.exportedInstance = null;
@@ -111,7 +105,7 @@ export const useAppState = create<AppState>()(
       instantiateComponent: (name, position) => {
         set((state) => {
           const component = state.components[name];
-          const id = instantiateComponent(component.id);
+          const id = graph.instantiateComponent(component.id);
           state.nodes.push({
             id: id.toString(),
             type: "instance",
@@ -135,7 +129,7 @@ export const useAppState = create<AppState>()(
             if (state.exportedInstance?.id === node.data.id) {
               state.exportedInstance = null;
             }
-            removeInstance(node.data.id);
+            graph.removeInstance(node.data.id);
           });
         });
       },
@@ -146,7 +140,7 @@ export const useAppState = create<AppState>()(
       },
       onEdgesDelete: (deleted: Edge[]) => {
         deleted.forEach((edge) => {
-          disconnectInstances(
+          graph.disconnectInstances(
             Number(edge.source),
             Number(edge.target),
             Number(edge.targetHandle)
@@ -155,7 +149,7 @@ export const useAppState = create<AppState>()(
       },
       onConnect: (connection: Edge | Connection) => {
         try {
-          connectInstances(
+          graph.connectInstances(
             Number(connection.source),
             connection.sourceHandle === "i"
               ? null
