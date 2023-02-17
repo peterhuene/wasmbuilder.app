@@ -5,7 +5,7 @@ import {
   ExclamationTriangleIcon,
   ExclamationCircleIcon,
 } from "@heroicons/react/24/outline";
-import { addComponent as addComponentToGraph, encodeGraph } from "./graph";
+import { graph } from "./graph";
 import { Component, useAppState, NotificationType } from "./state";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 
@@ -41,7 +41,10 @@ const downloadFile = (name: string, bytes: Uint8Array) => {
   const blob = new Blob([bytes], { type: "application/wasm" });
   const link = document.createElement("a");
   link.href = window.URL.createObjectURL(blob);
-  link.download = name + ".wasm";
+  if (!name.endsWith(".wasm")) {
+    name += ".wasm";
+  }
+  link.download = name;
   link.click();
 };
 
@@ -97,7 +100,7 @@ export const AddComponentDialog = ({
 
     const bytes = new Uint8Array(await file.arrayBuffer());
     try {
-      const component = addComponentToGraph(name, bytes) as Component;
+      const component = graph.addComponent(name, bytes) as Component;
       component.color = selectedColor;
       component.description = description;
       onClose(component);
@@ -419,7 +422,7 @@ export const DownloadComponentDialog = ({
     }
 
     try {
-      const bytes = encodeGraph({
+      const bytes = graph.encodeGraph({
         defineComponents,
         export: exportedInstance?.id,
         validate: true,
@@ -429,7 +432,7 @@ export const DownloadComponentDialog = ({
 
       let component = null;
       if (addComponent) {
-        component = addComponentToGraph(name, bytes);
+        component = graph.addComponent(name, bytes);
         component.color = selectedColor;
         component.description = description;
       }

@@ -1,0 +1,90 @@
+default world graph {
+    // TODO: once jsct supports type world items, remove the interface export
+    export graph: interface {
+        /// Represents a kind of import or export in a WebAssembly component.
+        enum item-kind {
+            /// The item is a core module.
+            module,
+            /// The item is a function.
+            function,
+            /// The item is a value.
+            value,
+            /// The item is a type.
+            %type,
+            /// The item is an instance.
+            instance,
+            /// The item is a component.
+            component,
+        }
+
+        /// Represents an import in a WebAssembly component.
+        record %import {
+            /// The import name.
+            name: string,
+            /// The import kind.
+            kind: item-kind,
+        }
+
+        /// Represents an export in a WebAssembly component.
+        record %export {
+            /// The export name.
+            name: string,
+            /// The export kind.
+            kind: item-kind,
+        }
+
+        /// Represents a WebAssembly component.
+        record component {
+            /// The id of the component in the graph/
+            id: component-id,
+            /// The name of the component.
+            name: string,
+            /// The imports of the component.
+            imports: list<%import>,
+            /// The exports of the component.
+            exports: list<%export>,
+            /// The WIT definition of the component's world.
+            wit: string
+        }
+
+        /// Represents options for encoding the graph.
+        record encode-options {
+            /// Whether or not to define components in the output.
+            define-components: bool,
+            /// The instance to export from the output.
+            %export: option<instance-id>,
+            /// Whether or not to validate the output.
+            validate: bool,
+        }
+
+        /// Represents a component identifier in the graph.
+        type component-id = u32
+
+        /// Represents an instance identifier in the graph.
+        type instance-id = u32
+
+        /// Adds a component to the graph.
+        add-component: func(name: string, bytes: list<u8>) -> result<component, string>
+
+        /// Instantiates a component in the graph.
+        instantiate-component: func(id: component-id) -> result<instance-id, string>
+
+        /// Connects two instances in the graph.
+        connect-instances: func(source: instance-id, source-export: option<u32>, target: instance-id, target-import: u32) -> result<_, string>
+
+        /// Remove a component from the graph.
+        remove-component: func(id: component-id)
+
+        /// Remove an instance from the graph.
+        remove-instance: func(id: instance-id)
+
+        /// Disconnect connected instances in the graph.
+        disconnect-instances: func(source: instance-id, target: instance-id, target-import: u32) -> result<_, string>
+
+        /// Print the current graph state.
+        print-graph: func() -> string
+
+        /// Encode the current graph state as a new component.
+        encode-graph: func(options: encode-options) -> result<list<u8>, string>
+    }
+}

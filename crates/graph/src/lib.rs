@@ -1,18 +1,18 @@
 use anyhow::Result;
-use bindings::interface::{
-    Component, ComponentId, EncodeOptions, Export, Import, InstanceId, Interface, ItemKind,
+use bindings::graph::{
+    Component, ComponentId, EncodeOptions, Export, Graph, Import, InstanceId, ItemKind,
 };
 use once_cell::sync::Lazy;
 use std::sync::Mutex;
 use wasm_compose::graph::CompositionGraph;
 use wasmparser::{ComponentExternalKind, ComponentTypeRef};
-use wit_component::{decode_world, WorldPrinter};
+use wit_component::DocumentPrinter;
 
 static GRAPH: Lazy<Mutex<CompositionGraph>> = Lazy::new(Default::default);
 
 struct GraphComponent;
 
-impl Interface for GraphComponent {
+impl Graph for GraphComponent {
     fn add_component(name: String, bytes: Vec<u8>) -> Result<Component, String> {
         let component = wasm_compose::graph::Component::from_bytes(name, bytes)
             .map_err(|e| format!("{e:#}"))?;
@@ -24,9 +24,32 @@ impl Interface for GraphComponent {
             .map_err(|e| format!("{e:#}"))?;
 
         let component = graph.get_component(id).unwrap();
-
-        let world =
-            decode_world(component.name(), component.bytes()).map_err(|e| format!("{e:#}"))?;
+        let wit = match wit_component::decode(component.name(), component.bytes()) {
+            Ok(decoded) => {
+                // Print the wit for the component
+                let resolve = decoded.resolve();
+                let mut printer = DocumentPrinter::default();
+                let mut wit = String::new();
+                for (i, (id, _)) in resolve.documents.iter().enumerate() {
+                    if i > 0 {
+                        wit.push_str("\n\n");
+                    }
+                    match printer.print(resolve, id) {
+                        Ok(s) => wit.push_str(&s),
+                        Err(e) => {
+                            // If we can't print the document, just use the error text
+                            wit = format!("{e:#}");
+                            break;
+                        }
+                    }
+                }
+                wit
+            }
+            Err(e) => {
+                // If we can't decode the component, just use the error text
+                format!("{e:#}")
+            }
+        };
 
         Ok(Component {
             id: id.0 as u32,
@@ -59,9 +82,7 @@ impl Interface for GraphComponent {
                     },
                 })
                 .collect(),
-            wit: WorldPrinter::default()
-                .print(&world)
-                .map_err(|e| format!("{e:#}"))?,
+            wit,
         })
     }
 

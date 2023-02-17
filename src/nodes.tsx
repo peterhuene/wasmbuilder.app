@@ -1,4 +1,4 @@
-import { Handle, Position } from "react-flow-renderer";
+import { Handle, Position } from "reactflow";
 import { Instance, useAppState } from "./state";
 
 type InstanceNodeProps = {

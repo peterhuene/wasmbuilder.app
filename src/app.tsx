@@ -8,7 +8,7 @@ import ReactFlow, {
   Background,
   ReactFlowProvider,
   BackgroundVariant,
-} from "react-flow-renderer";
+} from "reactflow";
 import { Component, Instance, useAppState } from "./state";
 import InstanceNode from "./nodes";
 import colors from "tailwindcss/colors";
@@ -125,11 +125,14 @@ const App = () => {
             </a>
           </div>
         </div>
-        <main className="">
-          <div ref={reactFlowWrapper} className="">
+        <main>
+          <div
+            ref={reactFlowWrapper}
+            className="absolute left-0 w-full h-[calc(100%-3.5rem)] md:left-80 top-14 md:w-[calc(100%-20rem)]"
+          >
             <ReactFlowProvider>
               <ReactFlow
-                className="absolute left-0 w-full h-[calc(100%-3.5rem)] md:left-80 top-14 md:w-[calc(100%-20rem)]"
+                className=""
                 nodeTypes={nodeTypes}
                 nodes={nodes}
                 edges={edges}
@@ -143,7 +146,12 @@ const App = () => {
                 onConnect={onConnect}
                 defaultEdgeOptions={defaultEdgeOptions}
               >
-                <Background variant={BackgroundVariant.Dots} size={0.5} />
+                <Background
+                  variant={BackgroundVariant.Dots}
+                  size={1}
+                  gap={15}
+                  color="black"
+                />
                 <MiniMap
                   className="border border-gray-300"
                   nodeColor={nodeColor}
