@@ -1,6 +1,3 @@
-MODULES := ./node_modules/.bin
-ESLINT := $(MODULES)/eslint
-PARCEL := $(MODULES)/parcel
 CARGO := cargo
 YARN := yarn
 NPX := npx
@@ -22,7 +19,7 @@ opt: bindgen # optimizes the graph wasm module
 	@$(WASM_STRIP) src/graph.core.wasm
 
 bundle: opt ## bundles the application
-	@$(PARCEL) build $(ENTRY_POINT)
+	@$(NPX) parcel build $(ENTRY_POINT) --no-scope-hoist
 
 format: ## formats source code
 	@$(CARGO) fmt
@@ -33,10 +30,10 @@ test: ## runs tests
 
 lint: ## runs linting
 	@$(CARGO) component clippy --release --target wasm32-unknown-unknown
-	@$(ESLINT) src
+	@$(NPX) eslint src
 
 run: bindgen ## runs development
-	@$(PARCEL) $(ENTRY_POINT) -p 3000
+	@$(NPX) parcel $(ENTRY_POINT) -p 3000
 
 setup: ## installs build dependencies
 	@$(YARN)
