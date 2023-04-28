@@ -7,11 +7,11 @@ edition = "2021"
 proc-macro = true
 
 [dependencies]
-anyhow = "1.0.69"
+anyhow = "1.0.70"
 mime_guess = "2.0.4"
 proc-macro-error = "1.0.4"
-proc-macro2 = "1.0.51"
-quote = "1.0.23"
-syn = "1.0.107"
-walkdir = "2.3.2"
+proc-macro2 = "1.0.56"
+quote = "1.0.26"
+syn = "2.0.15"
+walkdir = "2.3.3"
 wildmatch = "2.1.1"

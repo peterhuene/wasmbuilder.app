@@ -8,12 +8,12 @@ publish = false
 crate-type = ["cdylib"]
 
 [dependencies]
-anyhow = "1.0.69"
+anyhow = "1.0.70"
 once_cell = "1.17.1"
-wasm-compose = { git = "https://github.com/bytecodealliance/wasm-tools" }
-wasmparser = { git = "https://github.com/bytecodealliance/wasm-tools" }
-wat = { git = "https://github.com/bytecodealliance/wasm-tools" }
-wit-component = { git = "https://github.com/bytecodealliance/wasm-tools" }
+wasm-compose = "0.2.13"
+wasmparser = "0.104.0"
+wat = "1.0.63"
+wit-component = "0.8.2"
 
 [package.metadata.component]
 target = { path = "world.wit" }

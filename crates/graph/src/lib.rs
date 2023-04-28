@@ -62,7 +62,7 @@ impl Graph for GraphComponent {
                         ComponentTypeRef::Module(_) => ItemKind::Module,
                         ComponentTypeRef::Func(_) => ItemKind::Function,
                         ComponentTypeRef::Value(_) => ItemKind::Value,
-                        ComponentTypeRef::Type(_, _) => ItemKind::Type,
+                        ComponentTypeRef::Type(_) => ItemKind::Type,
                         ComponentTypeRef::Instance(_) => ItemKind::Instance,
                         ComponentTypeRef::Component(_) => ItemKind::Component,
                     },
