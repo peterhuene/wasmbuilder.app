@@ -9,10 +9,10 @@ help:
 	@grep -E '^[a-zA-Z\._-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 build: ## builds the graph component
-	@$(CARGO) component build --release -p graph
+	@$(CARGO) component build --release -p graph --target wasm32-unknown-unknown
 
 bindgen: build ## generates bindings for the graph component
-	@$(NPX) jsct transpile target/wasm32-unknown-unknown/release/graph.wasm --tla-compat -o src
+	@$(NPX) jco transpile target/wasm32-unknown-unknown/release/graph.wasm --tla-compat -o src
 
 opt: bindgen # optimizes the graph wasm module
 	@$(WASM_OPT) -Os src/graph.core.wasm -o src/graph.core.wasm
@@ -24,9 +24,6 @@ bundle: opt ## bundles the application
 format: ## formats source code
 	@$(CARGO) fmt
 	@$(YARN) run prettier -w .
-
-test: ## runs tests
-	@$(CARGO) test
 
 lint: ## runs linting
 	@$(CARGO) component clippy --release --target wasm32-unknown-unknown
