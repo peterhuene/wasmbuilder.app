@@ -1,12 +1,12 @@
 use anyhow::Result;
-use bindings::graph::{
+use bindings::exports::graph::{
     Component, ComponentId, EncodeOptions, Export, Graph, Import, InstanceId, ItemKind,
 };
 use once_cell::sync::Lazy;
 use std::sync::Mutex;
 use wasm_compose::graph::CompositionGraph;
 use wasmparser::{ComponentExternalKind, ComponentTypeRef};
-use wit_component::DocumentPrinter;
+use wit_component::WitPrinter;
 
 static GRAPH: Lazy<Mutex<CompositionGraph>> = Lazy::new(Default::default);
 
@@ -24,13 +24,13 @@ impl Graph for GraphComponent {
             .map_err(|e| format!("{e:#}"))?;
 
         let component = graph.get_component(id).unwrap();
-        let wit = match wit_component::decode(component.name(), component.bytes()) {
+        let wit = match wit_component::decode(component.bytes()) {
             Ok(decoded) => {
                 // Print the wit for the component
                 let resolve = decoded.resolve();
-                let mut printer = DocumentPrinter::default();
+                let mut printer = WitPrinter::default();
                 let mut wit = String::new();
-                for (i, (id, _)) in resolve.documents.iter().enumerate() {
+                for (i, (id, _)) in resolve.packages.iter().enumerate() {
                     if i > 0 {
                         wit.push_str("\n\n");
                     }
@@ -56,7 +56,7 @@ impl Graph for GraphComponent {
             name: component.name().to_string(),
             imports: component
                 .imports()
-                .map(|(_, name, _, ty)| Import {
+                .map(|(_, name, ty)| Import {
                     name: name.to_string(),
                     kind: match ty {
                         ComponentTypeRef::Module(_) => ItemKind::Module,
@@ -70,7 +70,8 @@ impl Graph for GraphComponent {
                 .collect(),
             exports: component
                 .exports()
-                .map(|(_, name, _, kind, _)| Export {
+                
+                .map(|(_, name, kind, _)| Export {
                     name: name.to_string(),
                     kind: match kind {
                         ComponentExternalKind::Module => ItemKind::Module,

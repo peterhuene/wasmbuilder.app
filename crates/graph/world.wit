@@ -1,4 +1,6 @@
-default world graph {
+package component:graph
+
+world graph {
     // TODO: once jsct supports type world items, remove the interface export
     export graph: interface {
         /// Represents a kind of import or export in a WebAssembly component.
