@@ -1,7 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import Highlight, { defaultProps, Language, Prism } from "prism-react-renderer";
-import vsDark from "prism-react-renderer/themes/vsDark";
+import { Highlight, themes, Prism } from "prism-react-renderer";
 import { Fragment, useEffect, useState } from "react";
 import { ConfirmRemoveDialog } from "./dialogs";
 import { Component, NotificationType, useAppState } from "./state";
@@ -229,10 +228,9 @@ export const ComponentDetails = ({
                         {selectedWit.length > 0 ? (
                           <div className="mt-2 max-h-96 overflow-y-auto">
                             <Highlight
-                              {...defaultProps}
                               code={selectedWit}
-                              theme={vsDark}
-                              language={"wit" as Language}
+                              theme={themes.vsDark}
+                              language={"wit"}
                             >
                               {({
                                 className,
