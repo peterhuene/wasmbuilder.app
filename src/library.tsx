@@ -264,7 +264,7 @@ const ComponentLibrary = React.forwardRef(
         </div>
       </>
     );
-  }
+  },
 );
 
 ComponentLibrary.displayName = "Component Library";

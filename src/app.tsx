@@ -69,7 +69,7 @@ const App = () => {
 
       instantiateComponent(name, position);
     },
-    [reactFlowInstance]
+    [reactFlowInstance],
   );
 
   const onDownloadComponent = () => {

@@ -79,7 +79,7 @@ export const useAppState = create<AppState>()(
           }
           delete state.components[component.name];
           state.nodes = state.nodes.filter(
-            (node) => node.data.component.id !== component.id
+            (node) => node.data.component.id !== component.id,
           );
         });
       },
@@ -143,7 +143,7 @@ export const useAppState = create<AppState>()(
           graph.disconnectInstances(
             Number(edge.source),
             Number(edge.target),
-            Number(edge.targetHandle)
+            Number(edge.targetHandle),
           );
         });
       },
@@ -155,7 +155,7 @@ export const useAppState = create<AppState>()(
               ? null
               : Number(connection.sourceHandle),
             Number(connection.target),
-            Number(connection.targetHandle)
+            Number(connection.targetHandle),
           );
         } catch (e) {
           set((state) => {
@@ -195,5 +195,5 @@ export const useAppState = create<AppState>()(
         });
       },
     };
-  })
+  }),
 );
