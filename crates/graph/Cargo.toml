@@ -9,11 +9,11 @@ crate-type = ["cdylib"]
 
 [dependencies]
 anyhow = "1.0.71"
-once_cell = "1.17.2"
-wasm-compose = "0.2.17"
-wasmparser = "0.107.0"
-wat = "1.0.66"
-wit-component = "0.11.0"
+once_cell = "1.18.0"
+wasm-compose = "0.3.0"
+wasmparser = "0.108.0"
+wat = "1.0.67"
+wit-component = "0.12.0"
 
 [package.metadata.component]
 

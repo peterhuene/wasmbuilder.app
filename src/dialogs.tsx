@@ -267,7 +267,7 @@ export const AddComponentDialog = ({
                                                 active
                                                   ? "text-white bg-indigo-600"
                                                   : "text-gray-900",
-                                                "relative cursor-default select-none py-2 pl-3 pr-9"
+                                                "relative cursor-default select-none py-2 pl-3 pr-9",
                                               )
                                             }
                                             value={color}
@@ -283,7 +283,7 @@ export const AddComponentDialog = ({
                                                       active
                                                         ? "text-white"
                                                         : "text-indigo-600",
-                                                      "absolute inset-y-0 right-0 flex items-center pr-4"
+                                                      "absolute inset-y-0 right-0 flex items-center pr-4",
                                                     )}
                                                   >
                                                     <CheckIcon
@@ -335,7 +335,7 @@ export const AddComponentDialog = ({
                                 accept=".wasm,.wat"
                                 onChange={(e) => {
                                   setFile(
-                                    (e.target as HTMLInputElement).files[0]
+                                    (e.target as HTMLInputElement).files[0],
                                   );
                                 }}
                               />
@@ -661,7 +661,7 @@ export const DownloadComponentDialog = ({
                                               active
                                                 ? "text-white bg-indigo-600"
                                                 : "text-gray-900",
-                                              "relative cursor-default select-none py-2 pl-3 pr-9"
+                                              "relative cursor-default select-none py-2 pl-3 pr-9",
                                             )
                                           }
                                           value={color}
@@ -677,7 +677,7 @@ export const DownloadComponentDialog = ({
                                                     active
                                                       ? "text-white"
                                                       : "text-indigo-600",
-                                                    "absolute inset-y-0 right-0 flex items-center pr-4"
+                                                    "absolute inset-y-0 right-0 flex items-center pr-4",
                                                   )}
                                                 >
                                                   <CheckIcon
