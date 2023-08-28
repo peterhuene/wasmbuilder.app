@@ -34,4 +34,4 @@ run: bindgen ## runs development
 
 setup: ## installs build dependencies
 	@$(YARN)
-	@$(CARGO) install --git https://github.com/bytecodealliance/cargo-component --locked
+	@$(CARGO) install --git https://github.com/bytecodealliance/cargo-component --locked cargo-component
