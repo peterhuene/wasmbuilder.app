@@ -8,4 +8,4 @@ yarn-error.log
 src/graph.core.wasm
 src/graph.d.ts
 src/graph.js
-src/exports/
+src/interfaces/

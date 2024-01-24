@@ -1,27 +1,30 @@
-cargo_component_bindings::generate!({
-    implementor: GraphComponent,
-});
+cargo_component_bindings::generate!();
 
 use anyhow::Result;
-use bindings::exports::graph::{
-    Component, ComponentId, EncodeOptions, Export, Guest as Graph, Import, InstanceId, ItemKind,
+use bindings::exports::wasmbuilder_app::graph::provider::{
+    Component, ComponentId, EncodeOptions, Export, GuestGraph, Import, InstanceId, ItemKind,
 };
-use once_cell::sync::Lazy;
-use std::sync::Mutex;
+use std::cell::RefCell;
 use wasm_compose::graph::CompositionGraph;
 use wasmparser::{ComponentExternalKind, ComponentTypeRef};
 use wit_component::WitPrinter;
 
-static GRAPH: Lazy<Mutex<CompositionGraph>> = Lazy::new(Default::default);
+pub struct Graph {
+    graph: RefCell<CompositionGraph<'static>>,
+}
 
-struct GraphComponent;
+impl GuestGraph for Graph {
+    fn new() -> Self {
+        Self {
+            graph: RefCell::new(CompositionGraph::new()),
+        }
+    }
 
-impl Graph for GraphComponent {
-    fn add_component(name: String, bytes: Vec<u8>) -> Result<Component, String> {
+    fn add_component(&self, name: String, bytes: Vec<u8>) -> Result<Component, String> {
         let component = wasm_compose::graph::Component::from_bytes(name, bytes)
             .map_err(|e| format!("{e:#}"))?;
 
-        let mut graph = GRAPH.lock().unwrap();
+        let mut graph = self.graph.borrow_mut();
 
         let id = graph
             .add_component(component)
@@ -90,24 +93,23 @@ impl Graph for GraphComponent {
         })
     }
 
-    fn instantiate_component(id: ComponentId) -> Result<InstanceId, String> {
-        GRAPH
-            .lock()
-            .unwrap()
+    fn instantiate_component(&self, id: ComponentId) -> Result<InstanceId, String> {
+        self.graph
+            .borrow_mut()
             .instantiate(id as usize)
             .map(|id| id.0 as u32)
             .map_err(|e| format!("{e:#}"))
     }
 
     fn connect_instances(
+        &self,
         source: InstanceId,
         source_export: Option<u32>,
         target: InstanceId,
         target_import: u32,
     ) -> Result<(), String> {
-        GRAPH
-            .lock()
-            .unwrap()
+        self.graph
+            .borrow_mut()
             .connect(
                 source as usize,
                 source_export.map(|e| e as usize),
@@ -117,34 +119,33 @@ impl Graph for GraphComponent {
             .map_err(|e| format!("{e:#}"))
     }
 
-    fn remove_component(id: ComponentId) {
-        GRAPH.lock().unwrap().remove_component(id as usize);
+    fn remove_component(&self, id: ComponentId) {
+        self.graph.borrow_mut().remove_component(id as usize);
     }
 
-    fn remove_instance(id: InstanceId) {
-        GRAPH.lock().unwrap().remove_instance(id as usize);
+    fn remove_instance(&self, id: InstanceId) {
+        self.graph.borrow_mut().remove_instance(id as usize);
     }
 
     fn disconnect_instances(
+        &self,
         source: InstanceId,
         target: InstanceId,
         target_import: u32,
     ) -> Result<(), String> {
-        GRAPH
-            .lock()
-            .unwrap()
+        self.graph
+            .borrow_mut()
             .disconnect(source as usize, target as usize, target_import as usize)
             .map_err(|e| format!("{e:#}"))
     }
 
-    fn print_graph() -> String {
-        format!("{:#?}", GRAPH.lock().unwrap())
+    fn print_graph(&self) -> String {
+        format!("{:#?}", self.graph.borrow())
     }
 
-    fn encode_graph(options: EncodeOptions) -> Result<Vec<u8>, String> {
-        GRAPH
-            .lock()
-            .unwrap()
+    fn encode_graph(&self, options: EncodeOptions) -> Result<Vec<u8>, String> {
+        self.graph
+            .borrow()
             .encode(wasm_compose::graph::EncodeOptions {
                 define_components: options.define_components,
                 export: options

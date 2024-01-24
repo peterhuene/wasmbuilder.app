@@ -10,8 +10,19 @@ import {
 } from "reactflow";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import { Component as GraphComponent } from "./exports/graph";
-import { graph } from "./graph";
+import { Component as GraphComponent } from "./interfaces/wasmbuilder-app-graph-provider";
+import { $init, provider } from "./graph";
+import process from "process";
+
+export let Graph = null;
+
+$init.then(() => {
+  Graph = new provider.Graph();
+
+  if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
+    globalThis.Graph = Graph;
+  }
+});
 
 export type Component = GraphComponent & {
   description: string;
@@ -72,7 +83,7 @@ export const useAppState = create<AppState>()(
         });
       },
       removeComponent: (component) => {
-        graph.removeComponent(component.id);
+        Graph.removeComponent(component.id);
         set((state) => {
           if (state.exportedInstance?.component.id == component.id) {
             state.exportedInstance = null;
@@ -105,7 +116,7 @@ export const useAppState = create<AppState>()(
       instantiateComponent: (name, position) => {
         set((state) => {
           const component = state.components[name];
-          const id = graph.instantiateComponent(component.id);
+          const id = Graph.instantiateComponent(component.id);
           state.nodes.push({
             id: id.toString(),
             type: "instance",
@@ -129,7 +140,7 @@ export const useAppState = create<AppState>()(
             if (state.exportedInstance?.id === node.data.id) {
               state.exportedInstance = null;
             }
-            graph.removeInstance(node.data.id);
+            Graph.removeInstance(node.data.id);
           });
         });
       },
@@ -140,7 +151,7 @@ export const useAppState = create<AppState>()(
       },
       onEdgesDelete: (deleted: Edge[]) => {
         deleted.forEach((edge) => {
-          graph.disconnectInstances(
+          Graph.disconnectInstances(
             Number(edge.source),
             Number(edge.target),
             Number(edge.targetHandle),
@@ -149,7 +160,7 @@ export const useAppState = create<AppState>()(
       },
       onConnect: (connection: Edge | Connection) => {
         try {
-          graph.connectInstances(
+          Graph.connectInstances(
             Number(connection.source),
             connection.sourceHandle === "i"
               ? null
