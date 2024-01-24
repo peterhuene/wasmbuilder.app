@@ -5,8 +5,7 @@ import {
   ExclamationTriangleIcon,
   ExclamationCircleIcon,
 } from "@heroicons/react/24/outline";
-import { graph } from "./graph";
-import { Component, useAppState, NotificationType } from "./state";
+import { Component, useAppState, NotificationType, Graph } from "./state";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 
 const Colors = [
@@ -100,7 +99,7 @@ export const AddComponentDialog = ({
 
     const bytes = new Uint8Array(await file.arrayBuffer());
     try {
-      const component = graph.addComponent(name, bytes) as Component;
+      const component = Graph.addComponent(name, bytes) as Component;
       component.color = selectedColor;
       component.description = description;
       onClose(component);
@@ -422,7 +421,7 @@ export const DownloadComponentDialog = ({
     }
 
     try {
-      const bytes = graph.encodeGraph({
+      const bytes = Graph.encodeGraph({
         defineComponents,
         export: exportedInstance?.id,
         validate: true,
@@ -432,7 +431,7 @@ export const DownloadComponentDialog = ({
 
       let component = null;
       if (addComponent) {
-        component = graph.addComponent(name, bytes);
+        component = Graph.addComponent(name, bytes);
         component.color = selectedColor;
         component.description = description;
       }

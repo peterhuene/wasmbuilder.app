@@ -8,15 +8,18 @@ publish = false
 crate-type = ["cdylib"]
 
 [dependencies]
-anyhow = "1.0.75"
-once_cell = "1.18.0"
-wasm-compose = "0.4.2"
-wasmparser = "0.112.0"
-wat = "1.0.71"
-wit-component = "0.14.0"
-cargo-component-bindings = { git = "https://github.com/bytecodealliance/cargo-component" }
+anyhow = "1.0.79"
+once_cell = "1.19.0"
+wasm-compose = "0.5.0"
+wasmparser = "0.119.0"
+wat = "1.0.83"
+wit-component = "0.19.1"
+cargo-component-bindings = "0.6.0"
 
 [package.metadata.component]
+
+[package.metadata.component.bindings]
+implementor = "GraphComponent"
 
 [package.metadata.component.target]
 path = "world.wit"
