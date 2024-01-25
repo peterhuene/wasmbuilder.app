@@ -1,4 +1,5 @@
 CARGO := cargo
+RUSTUP := rustup
 YARN := yarn
 NPX := npx
 ENTRY_POINT := src/index.html
@@ -35,3 +36,4 @@ run: bindgen ## runs development
 setup: ## installs build dependencies
 	@$(YARN)
 	@$(CARGO) install cargo-component
+	@$(RUSTUP) target add wasm32-unknown-unknown
