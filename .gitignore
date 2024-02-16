@@ -9,3 +9,12 @@ src/graph.core.wasm
 src/graph.d.ts
 src/graph.js
 src/interfaces/
+
+# yarn recommended ignores from https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
