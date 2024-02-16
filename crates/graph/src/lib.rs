@@ -1,4 +1,4 @@
-cargo_component_bindings::generate!();
+mod bindings;
 
 use anyhow::Result;
 use bindings::exports::wasmbuilder_app::graph::provider::{
