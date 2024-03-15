@@ -2,7 +2,7 @@ mod bindings;
 
 use anyhow::Result;
 use bindings::exports::wasmbuilder_app::graph::provider::{
-    Component, ComponentId, EncodeOptions, Export, GuestGraph, Import, InstanceId, ItemKind,
+    Component, ComponentId, EncodeOptions, Export, Guest, GuestGraph, Import, InstanceId, ItemKind,
 };
 use std::cell::RefCell;
 use wasm_compose::graph::CompositionGraph;
@@ -11,6 +11,12 @@ use wit_component::WitPrinter;
 
 pub struct Graph {
     graph: RefCell<CompositionGraph<'static>>,
+}
+
+bindings::export!(Graph with_types_in bindings);
+
+impl Guest for Graph {
+    type Graph = Self;
 }
 
 impl GuestGraph for Graph {
