@@ -1,3 +1,4 @@
+#[allow(warnings)]
 mod bindings;
 
 use anyhow::Result;
