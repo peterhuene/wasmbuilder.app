@@ -4,3 +4,16 @@ members = [
     "crates/graph",
     "crates/fastly-static-site",
 ]
+
+[profile.release]
+opt-level = "z"          # Optimize for size.
+lto = true              # Link Time Optimization
+codegen-units = 1        # allow for maximum size reduction optimizations
+strip = true             # Automatically strip symbols from the binary.
+panic = 'abort'          # Abort on panic
+debug = false
+debug-assertions = false
+overflow-checks = false
+incremental = false
+rpath = false
+
