@@ -43,21 +43,19 @@ impl GuestGraph for Graph {
                 // Print the wit for the component
                 let resolve = decoded.resolve();
                 let mut printer = WitPrinter::default();
-                let mut wit = String::new();
-                for (i, (id, _)) in resolve.packages.iter().enumerate() {
-                    if i > 0 {
-                        wit.push_str("\n\n");
-                    }
-                    match printer.print(resolve, id) {
-                        Ok(s) => wit.push_str(&s),
-                        Err(e) => {
-                            // If we can't print the document, just use the error text
-                            wit = format!("{e:#}");
-                            break;
-                        }
-                    }
-                }
-                wit
+                let nested = resolve
+                    .packages
+                    .iter()
+                    .map(|(id, _)| id)
+                    .filter(|id| *id != decoded.package())
+                    .collect::<Vec<_>>();
+
+                printer
+                    .print(resolve, decoded.package(), &nested)
+                    .unwrap_or_else(|e| {
+                        // If we can't print the document, just use the error text
+                        format!("{e:#}")
+                    })
             }
             Err(e) => {
                 // If we can't decode the component, just use the error text
